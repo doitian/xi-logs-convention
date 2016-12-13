@@ -1,11 +1,12 @@
-MD := $(shell ls *.md | grep -v README | sort -t . -k 1,1n -k 2,2n | sed 's/ /\\&/g')
-MD_IN_SHELL := $(shell echo "$(MD)" | sed 's/[()]/\\&/g')
+NAME := 日志规范
 
 html: index.html
 
-docx: 日志规范.docx
+docx: $(NAME).docx
 
-index.html 日志规范.docx: pandoc.css $(MD)
-	pandoc --toc --css pandoc.css -s -o $@ $(MD_IN_SHELL)
+pdf: $(NAME).pdf
 
-.PHONY: pdf docx
+index.html $(NAME).docx $(NAME).pdf:
+	/usr/bin/env bash build.sh $@
+
+.PHONY: index.html $(NAME).docx
