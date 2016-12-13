@@ -1,0 +1,34 @@
+image: registry.3pjgames.com/docker/build-env:pandoc
+
+stages:
+  - build
+  - deploy
+
+build:
+  stage: build
+  script:
+    - make
+  artifacts:
+    name: docs
+    paths:
+      - index.html
+      - pandoc.css
+  only:
+    - master
+  tags:
+    - docker
+
+deploy:
+  stage: deploy
+  script:
+    - tar -cf - index.html pandoc.css | ssh assets@nas.3pjgames.com "mkdir -p public/xi/logs-convention && tar -xf - -C public/xi/logs-convention"
+  dependencies:
+    - skynetx-mac
+  only:
+    - tags
+    - master
+  tags:
+    - deploy
+  environment:
+    name: doc
+    url: http://svn.3pjgames.com/assets/public/xi/logs-convention/
