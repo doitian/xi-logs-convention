@@ -23,9 +23,8 @@ deploy:
   script:
     - tar -cf - index.html pandoc.css | ssh assets@nas.3pjgames.com "mkdir -p public/xi/logs-convention && tar -xf - -C public/xi/logs-convention"
   dependencies:
-    - skynetx-mac
+    - build
   only:
-    - tags
     - master
   tags:
     - deploy
