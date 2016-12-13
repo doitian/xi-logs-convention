@@ -1,2 +1,5 @@
 *.tmp
 .Ulysses*
+*.html
+*.docx
+*.pdf
