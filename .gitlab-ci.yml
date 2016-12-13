@@ -46,4 +46,4 @@ deploy:
     - deploy
   environment:
     name: doc
-    url: http://svn.3pjgames.com/assets/public/xi/logs-convention/
+    url: https://svn.3pjgames.com/assets/public/xi/logs-convention/
