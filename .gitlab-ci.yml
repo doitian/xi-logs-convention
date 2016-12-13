@@ -12,6 +12,7 @@ build-html:
     name: html
     paths:
       - index.html
+      - timerange.png
       - pandoc.css
   only:
     - master
@@ -35,7 +36,7 @@ build-docx:
 deploy:
   stage: deploy
   script:
-    - tar -cf - index.html pandoc.css *.docx | ssh assets@nas.3pjgames.com "mkdir -p public/xi/logs-convention && tar -xf - -C public/xi/logs-convention"
+    - tar -cf - index.html pandoc.css *.png *.docx | ssh assets@nas.3pjgames.com "mkdir -p public/xi/logs-convention && tar -xf - -C public/xi/logs-convention"
   dependencies:
     - build-html
     - build-docx
