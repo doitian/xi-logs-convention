@@ -7,14 +7,14 @@ stages:
 build-html:
   stage: build
   script:
-    - make
+    - make html
   artifacts:
     name: html
     paths:
       - index.html
       - pandoc.css
   only:
-    - master html
+    - master
   tags:
     - docker
 
