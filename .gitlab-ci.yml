@@ -4,26 +4,41 @@ stages:
   - build
   - deploy
 
-build:
+build-html:
   stage: build
   script:
     - make
   artifacts:
-    name: docs
+    name: html
     paths:
       - index.html
       - pandoc.css
+  only:
+    - master html
+  tags:
+    - docker
+
+build-docx:
+  stage: build
+  script:
+    - make docx
+  artifacts:
+    name: docx
+    paths:
+      - 日志规范.docx
   only:
     - master
   tags:
     - docker
 
+
 deploy:
   stage: deploy
   script:
-    - tar -cf - index.html pandoc.css | ssh assets@nas.3pjgames.com "mkdir -p public/xi/logs-convention && tar -xf - -C public/xi/logs-convention"
+    - tar -cf - index.html pandoc.css *.docx | ssh assets@nas.3pjgames.com "mkdir -p public/xi/logs-convention && tar -xf - -C public/xi/logs-convention"
   dependencies:
-    - build
+    - build-html
+    - build-docx
   only:
     - master
   tags:
