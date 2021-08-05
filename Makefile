@@ -1,12 +1,17 @@
 NAME := 日志规范
 
-html: index.html
+html: docs/index.html
 
-docx: $(NAME).docx
+docx: docs/$(NAME).docx
 
-pdf: $(NAME).pdf
+pdf: docs/$(NAME).pdf
 
-index.html $(NAME).docx $(NAME).pdf:
+docs/index.html docs/$(NAME).docx docs/$(NAME).pdf:
 	/usr/bin/env bash build.sh $@
 
-.PHONY: index.html $(NAME).docx
+all: html docx
+
+clean:
+	rm -f docs/*
+
+.PHONY: html docx pdf all

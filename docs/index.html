@@ -1,0 +1,487 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>1. 总则</title>
+  <style>
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    span.underline{text-decoration: underline;}
+    div.column{display: inline-block; vertical-align: top; width: 50%;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    ul.task-list{list-style: none;}
+    .display.math{display: block; text-align: center; margin: 0.5rem auto;}
+  </style>
+  <link rel="stylesheet" href="pandoc.css" />
+  <!--[if lt IE 9]>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv-printshiv.min.js"></script>
+  <![endif]-->
+</head>
+<body>
+<nav id="TOC" role="doc-toc">
+<ul>
+<li><a href="#总则">1. 总则</a></li>
+<li><a href="#通用">2. 通用</a></li>
+<li><a href="#字段命名">3. 字段命名</a></li>
+<li><a href="#日志模块">4. 日志模块</a>
+<ul>
+<li><a href="#保留">4.1. 保留</a>
+<ul>
+<li><a href="#skynet_addr-string">skynet_addr (string)</a></li>
+<li><a href="#name-string">name (string)</a></li>
+<li><a href="#encode-printer">encode, printer</a></li>
+<li><a href="#level-integer">level (integer)</a></li>
+<li><a href="#application_name-string">application_name (string)</a></li>
+<li><a href="#app_project-app_name-app_version-app_env-app_identifier-string">app_project, app_name, app_version, app_env, app_identifier (string)</a></li>
+<li><a href="#source-string">source (string)</a></li>
+<li><a href="#time-string">time (string)</a></li>
+<li><a href="#timestamp">timestamp</a></li>
+</ul></li>
+<li><a href="#全局">4.2. 全局</a>
+<ul>
+<li><a href="#msg-string">msg (string)</a></li>
+<li><a href="#msg_zh-string">msg_zh (string)</a></li>
+<li><a href="#stacktrace-string">stacktrace (string)</a></li>
+<li><a href="#fingerprint-string">fingerprint (string)</a></li>
+<li><a href="#file-string-line-number">file (string), line (number)</a></li>
+<li><a href="#module-string">module (string)</a></li>
+<li><a href="#submodule-string">submodule (string)</a></li>
+<li><a href="#func-string">func (string)</a></li>
+<li><a href="#args-string">args (string)</a></li>
+<li><a href="#resp-string">resp (string)</a></li>
+</ul></li>
+<li><a href="#请求-request">4.3. 请求 (request)</a>
+<ul>
+<li><a href="#request_id-string-必须">request_id (string) 必须</a></li>
+<li><a href="#request_duration-number">request_duration (number)</a></li>
+<li><a href="#request_status-string">request_status (string)</a></li>
+<li><a href="#request_error-string">request_error (string)</a></li>
+</ul></li>
+<li><a href="#玩家-user">4.4. 玩家 (user)</a>
+<ul>
+<li><a href="#user_id-string-必须">user_id (string) 必须</a></li>
+<li><a href="#user_provider-string">user_provider (string)</a></li>
+</ul></li>
+<li><a href="#档案-profile">4.5. 档案 (profile)</a>
+<ul>
+<li><a href="#profile_id-string">profile_id (string)</a></li>
+<li><a href="#profile_server_id-string">profile_server_id (string)</a></li>
+<li><a href="#profile_level-integer">profile_level (integer)</a></li>
+<li><a href="#profile_nickname-string">profile_nickname (string)</a></li>
+<li><a href="#profile_online_duration-number">profile_online_duration (number)</a></li>
+<li><a href="#profile_register_date-integer">profile_register_date (integer)</a></li>
+<li><a href="#profile_last_login_date-integer">profile_last_login_date (integer)</a></li>
+</ul></li>
+<li><a href="#客户端-client">4.6. 客户端 (client)</a>
+<ul>
+<li><a href="#client_id-string">client_id (string)</a></li>
+<li><a href="#client_version-string">client_version (string)</a></li>
+</ul></li>
+<li><a href="#资源-res">4.7. 资源 (res)</a>
+<ul>
+<li><a href="#res_reason-string">res_reason (string)</a></li>
+<li><a href="#res_name_change-number">res_NAME_change (number)</a></li>
+<li><a href="#res_name_total-number">res_NAME_total (number)</a></li>
+<li><a href="#res_name_unit-string">res_NAME_unit (string)</a></li>
+</ul></li>
+<li><a href="#道具-item">4.8. 道具 (item)</a>
+<ul>
+<li><a href="#item_id-string">item_id (string)</a></li>
+<li><a href="#item_type-string">item_type (string)</a></li>
+<li><a href="#item_reason-string">item_reason (string)</a></li>
+<li><a href="#item_change-number">item_change (number)</a></li>
+<li><a href="#item_total-number">item_total (number)</a></li>
+</ul></li>
+<li><a href="#任务-mission">4.9. 任务 (mission)</a>
+<ul>
+<li><a href="#mission_id-string">mission_id (string)</a></li>
+<li><a href="#mission_type-string">mission_type (string)</a></li>
+<li><a href="#missing_started-number">missing_started (number)</a></li>
+<li><a href="#missing_completed-number">missing_completed (number)</a></li>
+<li><a href="#missing_failed-number">missing_failed (number)</a></li>
+<li><a href="#mission_progress">mission_progress</a></li>
+</ul></li>
+<li><a href="#关卡-stage">4.10. 关卡 (stage)</a>
+<ul>
+<li><a href="#stage_id-string">stage_id (string)</a></li>
+<li><a href="#stage_type-string">stage_type (string)</a></li>
+<li><a href="#stage_entry-string">stage_entry (string)</a></li>
+<li><a href="#stage_started-number">stage_started (number)</a></li>
+<li><a href="#stage_completed-number">stage_completed (number)</a></li>
+<li><a href="#stage_failed-number">stage_failed (number)</a></li>
+</ul></li>
+<li><a href="#订单-order">4.11. 订单 (order)</a>
+<ul>
+<li><a href="#order_id-string">order_id (string)</a></li>
+<li><a href="#order_product-string">order_product (string)</a></li>
+</ul></li>
+<li><a href="#引导-guide">4.12. 引导 (guide)</a>
+<ul>
+<li><a href="#guide_id-string">guide_id (string)</a></li>
+</ul></li>
+</ul></li>
+<li><a href="#事件规范">5. 事件规范</a>
+<ul>
+<li><a href="#注册登录">注册/登录</a>
+<ul>
+<li><a href="#profile_last_login_date-integer-1">profile_last_login_date (integer)</a></li>
+</ul></li>
+<li><a href="#异常">异常</a></li>
+</ul></li>
+<li><a href="#skynetx-tips">5. Skynetx Tips</a>
+<ul>
+<li><a href="#转发配置">转发配置</a></li>
+<li><a href="#日志记录">日志记录</a></li>
+</ul></li>
+<li><a href="#日志搜索">6. 日志搜索</a>
+<ul>
+<li><a href="#搜索语法">搜索语法</a>
+<ul>
+<li><a href="#逻辑操作符">逻辑操作符</a></li>
+<li><a href="#通配符">通配符</a></li>
+<li><a href="#数字比较">数字比较</a></li>
+<li><a href="#转义">转义</a></li>
+<li><a href="#时间范围">时间范围</a></li>
+</ul></li>
+</ul></li>
+</ul>
+</nav>
+<h1 id="总则">1. 总则</h1>
+<p>下载: <a href="日志规范.docx">Word</a></p>
+<p>所有服务器日志发往 <a href="http://www.rsyslog.com">rsyslog</a>，使用 facility <code>LOCAL6</code>。</p>
+<p>不同服务的日志通过程序名区分，也就是 <code>man 3 syslog</code> 中 <code>openlog</code> 的第一个参数。有的 syslog 库里也称为 <code>tag</code> 或者 <code>programname</code>。对应命令行工具 logger 的 <code>-t</code> 参数。</p>
+<p>程序名<strong>必须</strong>遵守下面的格式</p>
+<pre><code>PROJECT.APP.VERSION.ENV.IDENTIFIER</code></pre>
+<ul>
+<li>PROJECT: 项目名</li>
+<li>APP: 应用名，比如 web, worker, server, pusher</li>
+<li>VERSION: 版本，必须是主 git 仓库有效的 revision。生产环境使用部署的最新 git commit sha1 hash 的前 7 位。</li>
+<li>ENV: 环境，比如 ci, staging, xy (玄云机房), prod 等等</li>
+<li>IDENTIFIER: 用来区分相同环境中同一个应用的不同实例，比如服务器可以用 CENTER 的服务器 ID</li>
+</ul>
+<p>一个简单的使用命令号发送日志的例子：</p>
+<pre><code>logger -t ops.cmd.latest.test.1 -p local6.info test</code></pre>
+<p>已经使用 <a href="https://gitlab.3pjgames.com/xi/skynetx">skynetx</a> 的项目只需要配置以下环境变量即可</p>
+<ul>
+<li><code>SX_LOGSERVICE</code> 配置成 <code>sx_syslog</code></li>
+<li><code>SX_LOGGER</code> 配置成程序名</li>
+</ul>
+<p>并保证 skynet 的启动配置文件里，logservice 和 logger 使用的是对应的环境变量</p>
+<pre><code>logger = &quot;$SX_LOGGER&quot;
+logger = logger ~= &quot;&quot; and logger or nil
+logservice = &quot;$SX_LOGSERVICE&quot;
+loglevel = &quot;$SX_LOGLEVEL&quot;</code></pre>
+<p>每条日志可选包含 skynet 服务地址，必须加在日志开头，使用16进制，字母小写，包括在 <code>[:</code> 和 <code>]</code> 中，并和之后的日志使用一个英文空格分开。</p>
+<pre><code>[:0000001b] Hello</code></pre>
+<p>日志的主体是一个 JSON Object，否则会转化成一个只包含 <code>msg</code> 字段的的 JSON Object，值就是日志的内容，比如上面的日志和下面是等效的</p>
+<pre><code>[:0000001b] {&quot;msg&quot;:&quot;Hello&quot;}</code></pre>
+<p>使用 skynetx 的项目只需要使用 <code>sx.logger</code> 来输出日志即可。</p>
+<p>剩余的文档会对日志的字段进行规范化。</p>
+<h1 id="通用">2. 通用</h1>
+<ul>
+<li>优先使用字符串和数字做为字段的值。除非要做大小判断，和累加等操作才使用数字，比如用户 ID 等应该使用字符串为值。</li>
+<li>同一个字段名不能一会是字符串，一会是数字，会导致日志索引出错还不被收录。</li>
+<li>尽量少使用嵌套</li>
+<li>避免把内部的复杂数据结构直接输出日志，整理出哪些字段是要做查询的，单独提出来，其余的通过 <code>inspect</code>, <code>cjson</code> 等先转成字符串。</li>
+<li>有新字段请同时更新本文档</li>
+<li>本文档未收录的字段建议有 <code>extra_</code> 开头以避免和未来添加的字段规范冲突</li>
+</ul>
+<h1 id="字段命名">3. 字段命名</h1>
+<p>字段名必须使用小写字母开头，允许包含字母，数字和下划线。使用容易理解的字段名，因为查询日志的人并不是写日志的人，减少使用晦涩的简称。</p>
+<p>数字字段的名字必须是能通过后缀推断出来的，比如 <code>_total</code>, <code>_diff</code>, <code>_seconds</code>, <code>_count</code>, <code>_amount</code> 等等。</p>
+<p>日志中的所有嵌套字段首先会被摊平，使用 <code>_</code> 连接字段名，比如</p>
+<pre><code>{
+  &quot;res&quot;: {
+    &quot;gem_diff&quot;: 100,
+    &quot;gem_total&quot;: 500
+  }
+}</code></pre>
+<p>和下面的结构是等价的</p>
+<pre><code>{
+  &quot;res_gem_diff&quot;: 100,
+  &quot;res_gem_total&quot;: 500
+}</code></pre>
+<p>所有字段根据前缀分组成模块，需要记录的数据如果符合某个模块必须使用对应的模块输出日志。如果没有模块能满足，使用项目名做为自定义模块，即和程序名中的 <code>PROJECT</code> 相同，或者使用 <code>extra</code> 模块。</p>
+<p>因为日志最终会被摊平，模块可以使用嵌套的结构，也可以使用摊平之后的结构。注意使用嵌套的模块格式的话，<code>slogger</code> 并不会递归合并字段。</p>
+<p>对于通用性高的可以按照本文档定义新的模块并提交 Merge Request。</p>
+<p>注意在 Graylog 中所有 JSON 中提取的字段都会添加 <code>json_</code> 的前缀，等项目日志规范下来之后会去掉该前缀。</p>
+<h1 id="日志模块">4. 日志模块</h1>
+<h2 id="保留">4.1. 保留</h2>
+<p>保留模块的字段不需要添加前缀，用于日志内部一些字段，和在框架自动记录的字段。应用中使用这些字段不保证会被记录到最终的日志中。</p>
+<h3 id="skynet_addr-string">skynet_addr (string)</h3>
+<p>服务地址，日志在解析时会自动从日志开头提取类似 <code>[:0000001b] </code> 这样的地址并保存成 <code>skynet_addr</code> 字段，表示输出日志所在的 skynet 服务地址。</p>
+<h3 id="name-string">name (string)</h3>
+<p>日志对象的名字，一般用于记录日志所在的文件。</p>
+<h3 id="encode-printer">encode, printer</h3>
+<p>用于 slogger 初始化配置的保留字段。并且在初始化时，<code>level</code> 是用来配置要现实的最大日志等级，<code>time</code> 用来配置获得当前时间的函数。</p>
+<h3 id="level-integer">level (integer)</h3>
+<p>日志等级，数字越小严重程度越高，具体对应关系为</p>
+<pre><code>  debug = 7
+  info = 6
+  warn = 5
+  error = 4
+  fatal = 3</code></pre>
+<h3 id="application_name-string">application_name (string)</h3>
+<p>程序名，就是 <code>openlog</code> 中第一个参数，或者命令行中 <code>-t</code> 选项指定的值，或者是 <code>skynet</code> 中 <code>logservice</code> 使用 <code>sx_syslog</code> 后 <code>logger</code> 中的值。</p>
+<h3 id="app_project-app_name-app_version-app_env-app_identifier-string">app_project, app_name, app_version, app_env, app_identifier (string)</h3>
+<p>依次对应程序名规范中 <code>PROJECT.APP.VERSION.ENV.IDENTIFIER</code></p>
+<h3 id="source-string">source (string)</h3>
+<p>日志产生所有的主机名</p>
+<h3 id="time-string">time (string)</h3>
+<p>时间</p>
+<h3 id="timestamp">timestamp</h3>
+<p>Graylog 内部用来记录日志时候的字段，会从 time 字段中解析，如果没有 time 字段会使用日志记录的时间。</p>
+<h2 id="全局">4.2. 全局</h2>
+<p>全局字段包含最常用的一些字段，同样不需要加前缀。</p>
+<h3 id="msg-string">msg (string)</h3>
+<p>可读的日志消息</p>
+<h3 id="msg_zh-string">msg_zh (string)</h3>
+<p>中文日志消息，用这个字段以后可以支持中文分词，让搜索更精确。</p>
+<h3 id="stacktrace-string">stacktrace (string)</h3>
+<p>调用栈，帮助定位错误。Lua-xi 中的 slogger 提供了 <code>xpcall_handler</code> 方便记录发生错误时的调用栈。</p>
+<h3 id="fingerprint-string">fingerprint (string)</h3>
+<p>使用 “,” 分隔的用于 Sentry 错误自定义分组。详细参考 Sentry 关于 fingerprint 的说明。</p>
+<h3 id="file-string-line-number">file (string), line (number)</h3>
+<p>日志所在位置的文件名和行号，同样用于定位错误。Lua-xi 提供了 <code>fileline</code> 方法。</p>
+<h3 id="module-string">module (string)</h3>
+<p>用于表示程序中的功能模块，比如副本，邮件等。</p>
+<h3 id="submodule-string">submodule (string)</h3>
+<p>功能子模块。</p>
+<h3 id="func-string">func (string)</h3>
+<p>当前执行的命令，比如删除邮件</p>
+<h3 id="args-string">args (string)</h3>
+<p>命令的参数，用于区分同一个命令多次执行，比如删除邮件可以是要删除的邮件 ID 列表。</p>
+<h3 id="resp-string">resp (string)</h3>
+<p>请求返回结果</p>
+<h2 id="请求-request">4.3. 请求 (request)</h2>
+<p>请求模块用于记录一条 API 请求相关信息。每个请求应该有一条主日志包含所有该次请求相关的信息，一些信息无法整合在一条日志的再单独记录，比如道具数量。一次请求的多条日志使用相同的 <code>request_id</code>。</p>
+<h3 id="request_id-string-必须">request_id (string) 必须</h3>
+<p>请求的唯一 ID。如果一个请求产生多条日志，他们<strong>必须</strong>有相同的 <code>request_id</code>。</p>
+<h3 id="request_duration-number">request_duration (number)</h3>
+<p>请求响应时间，单位是秒，如果精度上允许可以使用小数。</p>
+<h3 id="request_status-string">request_status (string)</h3>
+<p>请求的处理状态，使用 OK 表示成功，其它的状态由项目自己确定。</p>
+<h3 id="request_error-string">request_error (string)</h3>
+<p>请求成功的话不加该字段，出错了加上错误信息。</p>
+<h2 id="玩家-user">4.4. 玩家 (user)</h2>
+<h3 id="user_id-string-必须">user_id (string) 必须</h3>
+<p>用户 ID，Center 返回的 token 解码后得到。对应 Center 中的用户 ID</p>
+<h3 id="user_provider-string">user_provider (string)</h3>
+<p>玩家登录渠道。</p>
+<h2 id="档案-profile">4.5. 档案 (profile)</h2>
+<p>档案表示玩家在某个区中的游戏帐号，一般一个玩家在一个区中只能有一个档案。项目可以根据情况增加额外字段。</p>
+<h3 id="profile_id-string">profile_id (string)</h3>
+<p>档案 ID，对应 Center 上的游戏档案 ID</p>
+<h3 id="profile_server_id-string">profile_server_id (string)</h3>
+<p>档案所有服务器 ID，合服后这个应该是档案原来所在的服务器 ID</p>
+<h3 id="profile_level-integer">profile_level (integer)</h3>
+<p>玩家等级</p>
+<h3 id="profile_nickname-string">profile_nickname (string)</h3>
+<p>玩家昵称</p>
+<h3 id="profile_online_duration-number">profile_online_duration (number)</h3>
+<p>玩家在线时长，建议每次请求的时候都记录一次，值是距离上一次记录以来在线时间的秒数。精度允许的话可以使用小数。</p>
+<h3 id="profile_register_date-integer">profile_register_date (integer)</h3>
+<p>注册日期，使用 Linux timestamp 加上服务器时间时区偏移 (东8区是 28800) 整除 86400 得到。</p>
+<h3 id="profile_last_login_date-integer">profile_last_login_date (integer)</h3>
+<p>玩家上次登录日期, 使用 Linux timestamp 加上服务器时间时区偏移 (东8区是 28800) 整除 86400 得到。</p>
+<h2 id="客户端-client">4.6. 客户端 (client)</h2>
+<p>记录客户端的信息，最好客户端登录的时候上报信息到服务器方便定位错误</p>
+<h3 id="client_id-string">client_id (string)</h3>
+<p>客户端 ID，Center 分配的 API Key 开头的数字</p>
+<h3 id="client_version-string">client_version (string)</h3>
+<p>客户端版本信息，使用打包时的 git commit sha1 hash 前 7 位加上热更资源版本号组成。</p>
+<h2 id="资源-res">4.7. 资源 (res)</h2>
+<p>资源用来统计充值，代币等数量。资源名称根据项目确定，通用的资源请使用下面的名称：</p>
+<ul>
+<li><code>currency</code> 玩家充值到游戏中的真实货币</li>
+<li><code>gem</code> 钻石，代替货币在游戏中流通的代币</li>
+<li><code>coin</code> 金币，次级代币，一般只能从 <code>gem</code> 到 <code>coin</code> 单向兑换</li>
+</ul>
+<p>下面字段说明使用 <code>NAME</code> 代理实际的资源名，比如 <code>res_NAME_change</code> 对应钻石就是字段 <code>res_gem_change</code></p>
+<p>大部份字段可选，如果要记录变动，<strong>必须</strong>提供 <code>change</code> 和 <code>total</code> 两个字段。</p>
+<p>资源变动的原因可以使用 <code>res_reason</code>，搭配其它模块一起使用，比如全局中的 <code>module</code>, <code>submodule</code>, <code>func</code> 和 <code>args</code> 等字段，订单 order 模块中的字段。</p>
+<h3 id="res_reason-string">res_reason (string)</h3>
+<p>资源变动的原因，对 <code>module</code>, <code>submodule</code>, <code>func</code> 和 <code>args</code> 的补充，如果这 4 个字段已经描述得足够清楚可以不需要这个字段。</p>
+<h3 id="res_name_change-number">res_NAME_change (number)</h3>
+<p>资源本次变动，正数为增加，负数为减少。注意对于 <code>currency</code> 的话充值是正数。</p>
+<h3 id="res_name_total-number">res_NAME_total (number)</h3>
+<p>资源本次变动后剩余总数。</p>
+<h3 id="res_name_unit-string">res_NAME_unit (string)</h3>
+<p>资源单位，一般不需要，对于 <code>currency</code> 使用 ISO4217 中规范的 3 位字母标识货币种类，比如 人民币 CNY；美元 USD；欧元 EUR。</p>
+<h2 id="道具-item">4.8. 道具 (item)</h2>
+<p>可以是消耗物品，或者服务等等</p>
+<h3 id="item_id-string">item_id (string)</h3>
+<p>物品，服务等等的 ID</p>
+<h3 id="item_type-string">item_type (string)</h3>
+<p>道具类型</p>
+<h3 id="item_reason-string">item_reason (string)</h3>
+<p>本次变化原因，和 <code>res_reson</code> 相同，如果全局字段已经足够就不需要再添加此字段。</p>
+<h3 id="item_change-number">item_change (number)</h3>
+<p>本次数量变化</p>
+<h3 id="item_total-number">item_total (number)</h3>
+<p>本次数量变化后玩家剩余的数量</p>
+<h2 id="任务-mission">4.9. 任务 (mission)</h2>
+<p>用于跟踪任务，成就等等</p>
+<h3 id="mission_id-string">mission_id (string)</h3>
+<p>任务唯一标识</p>
+<h3 id="mission_type-string">mission_type (string)</h3>
+<p>任务类型</p>
+<h3 id="missing_started-number">missing_started (number)</h3>
+<p>如果要记录任务的开始状态，在任务开始的时候记录一次 1</p>
+<h3 id="missing_completed-number">missing_completed (number)</h3>
+<p>如果要记录任务的完成状态，在任务完成的时候记录一次 1</p>
+<h3 id="missing_failed-number">missing_failed (number)</h3>
+<p>如果要记录任务的失败状态，在任务失败的时候记录一次 1</p>
+<h3 id="mission_progress">mission_progress</h3>
+<p>使用 0~1 表示任务目前的进度，0 表示刚开始，1 表示已经完成</p>
+<h2 id="关卡-stage">4.10. 关卡 (stage)</h2>
+<p>用于跟踪各种关卡</p>
+<h3 id="stage_id-string">stage_id (string)</h3>
+<p>关卡唯一标识</p>
+<h3 id="stage_type-string">stage_type (string)</h3>
+<p>关卡类型</p>
+<h3 id="stage_entry-string">stage_entry (string)</h3>
+<p>进入途径，手动还是扫荡等等</p>
+<h3 id="stage_started-number">stage_started (number)</h3>
+<p>关卡开始的次数，手动就是 1，扫荡就是扫荡的次数</p>
+<h3 id="stage_completed-number">stage_completed (number)</h3>
+<p>关卡成功的次数</p>
+<h3 id="stage_failed-number">stage_failed (number)</h3>
+<p>关卡失败的次数</p>
+<h2 id="订单-order">4.11. 订单 (order)</h2>
+<p>订单引起的资源变化使用资源 (res) 模块记录</p>
+<h3 id="order_id-string">order_id (string)</h3>
+<p>Center 订单号</p>
+<h3 id="order_product-string">order_product (string)</h3>
+<p>玩家购买的商品</p>
+<h2 id="引导-guide">4.12. 引导 (guide)</h2>
+<h3 id="guide_id-string">guide_id (string)</h3>
+<p>玩家完成的引导 ID</p>
+<h1 id="事件规范">5. 事件规范</h1>
+<p>事件规范是对游戏中一些重要事件的格式做出定义，方便数据统计。</p>
+<h2 id="注册登录">注册/登录</h2>
+<p>玩家每次登录的时候记录一次，必须字段：</p>
+<ul>
+<li><code>module</code> 必须为 auth</li>
+<li><code>func</code> 如果是新注册的帐号填 register，否则填 login</li>
+<li><code>user_id</code></li>
+<li><code>profile_id</code></li>
+<li><code>profile_server_id</code></li>
+<li><code>profile_nickname</code></li>
+<li><code>profile_register_date</code> 需要在数据库记录，每次登录的时候都需要带上注册日期用于留存计算。使用 Linux timestamp 加上服务器时间时区偏移 (东8区是 28800) 整除 86400 得到。</li>
+<li><code>profile_last_login_date</code> 设置成当天的日期, 使用 Linux timestamp 加上服务器时间时区偏移 (东8区是 28800) 整除 86400 得到。</li>
+</ul>
+<h3 id="profile_last_login_date-integer-1">profile_last_login_date (integer)</h3>
+<ul>
+<li><code>request_status</code> OK 表示登录成功，失败使用对应的 auth 状态码，比如 403</li>
+</ul>
+<h2 id="异常">异常</h2>
+<p>异常使用 <code>msg</code> 和 <code>stacktrace</code> 两个字段记录。可以额外使用 <code>fingerprint</code> 来做自定义的分组。</p>
+<ul>
+<li><code>msg</code> 格式如下：“file:lineno: error message”。如果使用 <code>pcall</code> 和 <code>xpcall</code> 直接使用返回的错误消息就可以了</li>
+<li><code>stacktrace</code> 使用 <code>debug.traceback</code> 返回的调用栈</li>
+<li><code>fingerprint</code> 用于自定义错误消息分组</li>
+</ul>
+<p>可以直接使用 <code>slogger.xpcall_handler</code> 来简化。</p>
+<h1 id="skynetx-tips">5. Skynetx Tips</h1>
+<h2 id="转发配置">转发配置</h2>
+<p>Skynetx 中提供了 <code>sx.logger</code> 来输出日志。部署的时候需要配置环境变量，下面是三国内测服务器的例子：</p>
+<pre><code>SX_LOGGER=cc.server.a6d64d5.prod.18
+SX_LOGLEVEL=debug
+SX_LOGSERVICE=sx_syslog</code></pre>
+<p>其中 <code>SX_LOGGER</code> 的格式为</p>
+<pre><code>PROJECT.APP.VERSION.ENV.IDENTIFIER</code></pre>
+<p>各字段说明如下：</p>
+<ul>
+<li>PROJECT: 项目名.</li>
+<li>APP: 应用名，比如 web, worker, server, pusher.</li>
+<li>VERSION: 版本，可以用 git commit sha1。注意不能有 <code>.</code> 出现</li>
+<li>ENV: 环境，比如 ci, staging, xy (玄云机房).</li>
+<li>IDENTIFIER: 用来区分相同环境中同一个应用的不同实例，比如服务器可以用 CENTER 的服务器 ID.</li>
+</ul>
+<p>公司内项目组自己维护的机器如果想接入日志转发，请按照下面步骤配置</p>
+<ol type="1">
+<li><p>创建 <code>/data/log</code> 目录，日志会在这个目录下保存一份本地备份，以防日志系统本身出问题。</p>
+<pre><code> sudo mkdir -p /data/log
+ sudo chown syslog:adm /data/log</code></pre></li>
+<li><p>新建文件 <code>/etc/rsyslog.d/99-salt-rsyslog.conf</code></p>
+<pre><code> $template PJFile,&quot;/data/log/%programname%.log&quot;
+ $FileOwner syslog
+ $FileGroup syslog
+ $CreateDirs on
+ $DirCreateMode 0755
+ $FileCreateMode 0640
+ local6.* ?PJFile;RSYSLOG_SyslogProtocol23Format
+ local6.* @office.3pjgames.com:1514;RSYSLOG_SyslogProtocol23Format</code></pre></li>
+</ol>
+<p>目前公司和 UCloud 机房只会转发 Sentry 还没有配置日志搜索。</p>
+<h2 id="日志记录">日志记录</h2>
+<p>在创建日志对象的时候可以转入一些通用的字段，使用 <code>child</code> 创建子日志器的时候能继承所有父日志器的字段。比如当用户登录之后可以创建日志器</p>
+<pre><code>local sxlogger = require &quot;sx.logger&quot;
+local logger = sxlogger.create({
+  user_id=&quot;1&quot;,
+  user_server_id=&quot;1&quot;,
+  profile_id=&quot;1&quot;
+})
+agent.logger = logger</code></pre>
+<p>而每次请求可以创建子日志器，子日志器中新加的字段不会影响父日志器</p>
+<pre><code>local logger = agent.logger:child({
+  request_id = generate_request_id()
+})</code></pre>
+<p>已经创建的日志器，想要添加或者修改通用字段可以直接修改 <code>context</code> 成员，比如登录玩家换了新的客户端</p>
+<pre><code>logger.context.client_id = &quot;12&quot;</code></pre>
+<p>注意继承字段时，包括输出日志和 <code>context</code> 中已有的字段合并的时候都不会递归合并 table。</p>
+<h1 id="日志搜索">6. 日志搜索</h1>
+<p>这里只介绍了部分最常用的功能，详细文档参考 <a href="http://docs.graylog.org/en/2.1/pages/queries.html">Graylog2 的相关章节</a></p>
+<h2 id="搜索语法">搜索语法</h2>
+<p>搜索语法类似搜索引擎，但是引入了根据字段搜索的操作符</p>
+<p>搜索所有包含 ssh 的日志</p>
+<pre><code>ssh</code></pre>
+<p>搜索所有包含 ssh <strong>或</strong> login 的日志</p>
+<pre><code>ssh login</code></pre>
+<p>搜索所有精确包含短语 “ssh login” 的日志，使用英文引号</p>
+<pre><code>&quot;ssh login&quot;</code></pre>
+<p>搜索所有邮件模块的日志</p>
+<pre><code>module:mail</code></pre>
+<p>搜索有 <code>res_gem_change</code> 字段的日志</p>
+<pre><code>_exists_:res_gem_change</code></pre>
+<p>搜索没有 <code>res_gem_change</code> 字段的日志</p>
+<pre><code>_missing_:res_gem_change</code></pre>
+<h3 id="逻辑操作符">逻辑操作符</h3>
+<p>默认多个条件使用空格分开是或的关系，也可以显式地使用 OR，使用 AND 连接条件是与的关系，使用 NOT 是返回所有不满足指定条件的日志。使用括号可以改变结合的优先级。</p>
+<pre><code>(&quot;ssh login&quot; AND (source:example.org OR source:another.example.org)) OR _exists_:always_find_me</code></pre>
+<p>上面例子返回『包含短语 “ssh login” 并且主机名是 example.org 或者 another.example.org』的日志，或者是『有字段 <code>always_find_me</code> 的日志』</p>
+<p>AND, OR, NOT 都必须是全大写的英文字母。</p>
+<h3 id="通配符">通配符</h3>
+<p>使用 <code>*</code> 可以匹配 0 到任意个字符，比如</p>
+<pre><code>soruce:cc*-xy</code></pre>
+<p>可以匹配 source 是 <code>cc-xy</code>, <code>cc1-xy</code> 和 <code>cc10-xy</code> 的日志。</p>
+<p>使用 <code>?</code> 可以匹配任意 1 个字符，比如</p>
+<pre><code>source:cc?-xy</code></pre>
+<p>在上面三个例子中只会匹配 <code>cc1-xy</code></p>
+<h3 id="数字比较">数字比较</h3>
+<p>只能用于数字类型的字段</p>
+<p>区间，中括号 <code>[</code> 和 <code>]</code> 是包含边界的，花括号 <code>{</code> 和 <code>}</code> 是不包含边界的。</p>
+<pre><code>res_gem_change:[100, 200]
+res_gem_change:{100, 200}
+res_gem_change:[100, 200}
+res_gem_change:{100, 200]</code></pre>
+<p>也可以只指定单边的范围</p>
+<pre><code>res_gem_change:&gt;0
+res_gem_change:&gt;=0
+res_gem_change:&lt;0
+res_gem_change:&lt;=0</code></pre>
+<p>多个条件可以用逻辑操作符组合</p>
+<pre><code>res_gem_change:(&gt;0 AND &lt;100)</code></pre>
+<h3 id="转义">转义</h3>
+<p>以下特殊字符必须在之前添加 <code>\</code> 进行转义</p>
+<pre><code>&amp; | : \ / + - ! ( ) { } [ ] ^ &quot; ~ * ?</code></pre>
+<h3 id="时间范围">时间范围</h3>
+<p>时间范围有三种方式指定，只是查看最近的记录可以使用 Relative，想要精确查看某个时间段的可以使用 Absolute 来指定。</p>
+<figure>
+<img src="timerange.png" alt="时间范围" /><figcaption aria-hidden="true">时间范围</figcaption>
+</figure>
+</body>
+</html>
