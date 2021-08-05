@@ -12,6 +12,6 @@ docs/index.html docs/$(NAME).docx docs/$(NAME).pdf:
 all: html docx
 
 clean:
-	rm -f docs/*
+	rm -f docs/index.html docs/*.docx
 
 .PHONY: html docx pdf all
